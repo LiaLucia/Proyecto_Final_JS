@@ -28,3 +28,29 @@ input[type=text], input[type=number], select {
     background-color: #f2f2f2;
     padding: 20px;
   }
+
+
+/* NOSOTROS */
+
+
+
+  .contenedorPrincipalArticulos p {
+  text-align: justify;
+  margin: 10px;
+  font-family: "AvenirNext","Helvetica Neue",Helvetica,Arial,sans-serif; }
+
+  .contenedorPrincipalArticulos .nombre {
+    background-color: #ffd208d7;
+    height: 250px;
+    margin: 10px 5px; }
+  
+    .contenedorPrincipalArticulos .nombre:hover {
+    background-color: #ffd208d7;
+    transform: scale(1.01, 1.01);
+    margin: 10px 5px; }
+  .contenedorPrincipalArticulos .nombre p {
+    color: #000;
+    text-align: center;
+    font-family: "AvenirNext","Helvetica Neue",Helvetica,Arial,sans-serif; }
+  
+  

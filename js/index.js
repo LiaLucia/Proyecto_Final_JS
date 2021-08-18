@@ -12,6 +12,8 @@ const articulo4 = JSON.parse(articulo4JSON);
 
 const articulos = [articulo1, articulo2, articulo3, articulo4];
 
+const urlDolar = 'https://www.dolarsi.com/api/api.php?type=valoresprincipales';
+
 // CLASES
 class Articulo {
     constructor(nombre, descripcion, precio){
@@ -32,7 +34,7 @@ function nuevoArticulo(nombre, descripcion, precio){
 }
 
 function agregarArticulo(articulos, elemento){
-    elemento = {id: articulos.length, nombre: elemento.nombre, descripción: elemento.descripcion, precio: elemento.precio};
+    elemento = {id: articulos.length, nombre: elemento.nombre, descripción: elemento.descripcion, precio: elemento.precio.toFixed(2)};
     articulos.push(elemento);
 }
 
@@ -40,38 +42,37 @@ function guardarLocal (clave, articulos){
     localStorage.setItem(clave, articulos);
 }
 
-function mostrarArticulos(articulos){
-    $('#producto, p').remove();
-    $('#formArticulo').append('<p id = "p1" style = "display:none"> Se ha ingresado el producto ' + articulos.nombre + ' con el precio con IVA incluido: ' + articulos.precio.toFixed(2) + '</p>');
-    $('#p1').slideDown("slow")
-            .delay(2000)
-            .slideUp("slow")
-            .css("color","green");
-}
 
-function enviarFormulario(evento){
+function enviarFormulario(evento) {
     evento.preventDefault();
+    $.getJSON(urlDolar, function (respuesta, estado){
+        if (estado === "success"){
+            let cotizaciones = respuesta;
+            cotizacionDolar = cotizaciones[0].casa.venta;
+            let nombre = $('#nombre').val(); 
+            let descripcion = $('#descripcion').val(); 
+            let precio = $('#precio').val(); 
 
-    let nombre = $('#nombre').val(); 
-    let descripcion = $('#descripcion').val(); 
-    let precio = $('#precio').val(); 
+            const articulo = nuevoArticulo(nombre, descripcion, parseFloat(precio).toFixed(2));
+            articulo.sumarIva();
 
-    const articulo = nuevoArticulo(nombre, descripcion, precio);
-    articulo.sumarIva();
-
-    guardarLocal("articulo", JSON.stringify(articulo));
-    
-    mostrarArticulos(JSON.parse(localStorage.getItem("articulo")));
-    agregarArticulo(articulos, articulo)
-    console.log(articulos);
+            guardarLocal("articulo", JSON.stringify(articulo));
+            agregarArticulo(articulos, articulo)
+            mostrarArticulos(articulos, parseFloat(cotizacionDolar));
+        }
+    })
 }
 
+function mostrarArticulos(articulos, cotizacion){
+    $(".col-md-4").remove();
+    for (articulo of articulos){
+        let precioDolar = articulo.precio / cotizacion;
+        $('#row1').append('<div class="col-md-4" ><div class="nombre" id = "nombre"><p id = "p1" >Producto: ' + articulo.nombre + '<br> Precio con IVA incluido ($): ' + articulo.precio + '<br> Precio con IVA incluido (U$S): ' + precioDolar.toFixed(2) + '</p></div>')
+    }
+}
 
 // CÓDIGO
-
-//let formularioArticulo = document.getElementById("formArticulo");
-//formularioArticulo.addEventListener("submit", enviarFormulario);
-
 $(document).ready(function (){
     $('#enviar').click(enviarFormulario)
 });
+
