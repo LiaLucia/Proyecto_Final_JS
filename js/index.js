@@ -26,7 +26,6 @@ const articulo4 = JSON.parse(articulo4JSON);
 const articulos = [articulo1, articulo2, articulo3, articulo4];
 const urlDolar = 'https://www.dolarsi.com/api/api.php?type=valoresprincipales';
 
-
 //FUNCIONES
 
 function nuevoArticulo(nombre, descripcion, precio){
@@ -39,7 +38,6 @@ function agregarArticulo(articulos, elemento){
     elemento = {id: idUltimoElemento + 1, nombre: elemento.nombre, descripción: elemento.descripcion, precio: elemento.precio.toFixed(2)};
     articulos.push(elemento);
 }
-
 
 function guardarLocal (clave, articulos){
     localStorage.setItem(clave, articulos);
