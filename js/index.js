@@ -47,24 +47,34 @@ function enviarFormulario(evento) {
     evento.preventDefault();
     $.getJSON(urlDolar, function (respuesta, estado){
         if (estado === "success"){
+            
             let cotizaciones = respuesta;
             cotizacionDolar = cotizaciones[0].casa.venta;
             let nombre = $('#nombre').val(); 
             let descripcion = $('#descripcion').val(); 
             let precio = $('#precio').val(); 
 
-            const articulo = nuevoArticulo(nombre, descripcion, parseFloat(precio).toFixed(2));
-            articulo.sumarIva();
+            if (nombre !== "" && precio !== "" && descripcion !== ""){
+                const articulo = nuevoArticulo(nombre, descripcion, parseFloat(precio).toFixed(2));
+                articulo.sumarIva();
 
-            guardarLocal("articulo", JSON.stringify(articulo));
-            agregarArticulo(articulos, articulo)
-            mostrarArticulos(articulos, parseFloat(cotizacionDolar));
+                guardarLocal("articulo", JSON.stringify(articulo));
+                agregarArticulo(articulos, articulo)
+                mostrarArticulos(articulos, parseFloat(cotizacionDolar));
+            }
+            else{
+                $('#formArticulo').append('<p id = "textoError" style = "display:none"> No se puede ingresar el artículo ya que se deben completar todos los campos</p>')
+                $('#textoError').slideDown("slow")
+                                .css("color","red");
+            }
+            
         }
     })
 }
 
 function mostrarArticulos(articulos, cotizacion){
     $(".col-md-4").remove();
+    $('#textoError').remove();
     $('#formArticulo').append('<button id="eliminar" class="botonEliminar" style = "display:none"> Eliminar todos los artículos insertados</button>')
     $('#eliminar').slideDown("slow")
     for (articulo of articulos){
