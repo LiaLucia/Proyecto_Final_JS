@@ -65,11 +65,11 @@ function enviarFormulario(evento) {
 
 function mostrarArticulos(articulos, cotizacion){
     $(".col-md-4").remove();
-    $(".botonEliminar").remove();
-    $('#formArticulo').append('<button id="eliminar" class="botonEliminar"> Eliminar todos los artículos insertados</button>')
+    $('#formArticulo').append('<button id="eliminar" class="botonEliminar" style = "display:none"> Eliminar todos los artículos insertados</button>')
+    $('#eliminar').slideDown("slow")
     for (articulo of articulos){
         let precioDolar = articulo.precio / cotizacion;
-        $('#row1').append('<div class="col-md-4" ><div class="nombre" id = "nombre"><p id = "p1" >Producto: ' + articulo.nombre + '<br> Precio con IVA incluido ($): ' + articulo.precio + '<br> Precio con IVA incluido (U$S): ' + precioDolar.toFixed(2) + '</p> <div style="display:none;" >' + articulo.id + '</div> <button id="eliminar"> Eliminar artículo </button></div>')
+        $('#row1').append('<div class="col-md-4" ><div class="nombre" id = "nombre"><p id = "p1" >Producto: ' + articulo.nombre + '<br> Precio con IVA incluido ($): ' + articulo.precio + '<br> Precio con IVA incluido (U$S): ' + precioDolar.toFixed(2) + '</p> <div style="display:none;" >' + articulo.id + '</div></div>')
     }
 }
 
