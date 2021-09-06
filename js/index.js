@@ -1,19 +1,3 @@
-// DATOS (Objeto JSON)
-articulo1JSON = '{"id": 1, "nombre": "Baggio de naranja", "descripcion": "Caja de 1L", "precio": 120}'
-articulo2JSON = '{"id": 2, "nombre": "Ades multifruta", "descripcion": "Caja de 1L", "precio": 130}'
-articulo3JSON = '{"id": 3, "nombre": "Baggio de manzana", "descripcion": "Caja de 1L", "precio": 120}'
-articulo4JSON = '{"id": 4, "nombre": "Baggio de multifruta", "descripcion": "Caja de 1L", "precio": 120}'
-
-// Se convierten los datos a objetos JavaScript y se utilizan en un array de objetos
-const articulo1 = JSON.parse(articulo1JSON);
-const articulo2 = JSON.parse(articulo2JSON);
-const articulo3 = JSON.parse(articulo3JSON);
-const articulo4 = JSON.parse(articulo4JSON);
-
-const articulos = [articulo1, articulo2, articulo3, articulo4];
-
-const urlDolar = 'https://www.dolarsi.com/api/api.php?type=valoresprincipales';
-
 // CLASES
 class Articulo {
     constructor(nombre, descripcion, precio){
@@ -26,6 +10,23 @@ class Articulo {
     }
 }
 
+// DATOS (Objeto JSON)
+articulo1JSON = '{"id": 1, "nombre": "Baggio de naranja", "descripcion": "Caja de 1L", "precio": 120}'
+articulo2JSON = '{"id": 2, "nombre": "Ades multifruta", "descripcion": "Caja de 1L", "precio": 130}'
+articulo3JSON = '{"id": 3, "nombre": "Baggio de manzana", "descripcion": "Caja de 1L", "precio": 120}'
+articulo4JSON = '{"id": 4, "nombre": "Baggio de multifruta", "descripcion": "Caja de 1L", "precio": 120}'
+
+// Se convierten los datos a objetos JavaScript y se utilizan en un array de objetos
+const articulo1 = JSON.parse(articulo1JSON);
+const articulo2 = JSON.parse(articulo2JSON);
+const articulo3 = JSON.parse(articulo3JSON);
+const articulo4 = JSON.parse(articulo4JSON);
+
+// VARIABLES
+const articulos = [articulo1, articulo2, articulo3, articulo4];
+const urlDolar = 'https://www.dolarsi.com/api/api.php?type=valoresprincipales';
+
+
 //FUNCIONES
 
 function nuevoArticulo(nombre, descripcion, precio){
@@ -34,14 +35,15 @@ function nuevoArticulo(nombre, descripcion, precio){
 }
 
 function agregarArticulo(articulos, elemento){
-    elemento = {id: articulos.length, nombre: elemento.nombre, descripción: elemento.descripcion, precio: elemento.precio.toFixed(2)};
+    let idUltimoElemento = articulos[articulos.length - 1].id;
+    elemento = {id: idUltimoElemento + 1, nombre: elemento.nombre, descripción: elemento.descripcion, precio: elemento.precio.toFixed(2)};
     articulos.push(elemento);
 }
+
 
 function guardarLocal (clave, articulos){
     localStorage.setItem(clave, articulos);
 }
-
 
 function enviarFormulario(evento) {
     evento.preventDefault();
@@ -65,14 +67,26 @@ function enviarFormulario(evento) {
 
 function mostrarArticulos(articulos, cotizacion){
     $(".col-md-4").remove();
+    $(".botonEliminar").remove();
+    $('#formArticulo').append('<button id="eliminar" class="botonEliminar"> Eliminar todos los artículos insertados</button>')
     for (articulo of articulos){
         let precioDolar = articulo.precio / cotizacion;
-        $('#row1').append('<div class="col-md-4" ><div class="nombre" id = "nombre"><p id = "p1" >Producto: ' + articulo.nombre + '<br> Precio con IVA incluido ($): ' + articulo.precio + '<br> Precio con IVA incluido (U$S): ' + precioDolar.toFixed(2) + '</p></div>')
+        $('#row1').append('<div class="col-md-4" ><div class="nombre" id = "nombre"><p id = "p1" >Producto: ' + articulo.nombre + '<br> Precio con IVA incluido ($): ' + articulo.precio + '<br> Precio con IVA incluido (U$S): ' + precioDolar.toFixed(2) + '</p> <div style="display:none;" >' + articulo.id + '</div> <button id="eliminar"> Eliminar artículo </button></div>')
     }
 }
+
+function eliminarArticulos(evento){
+    evento.preventDefault();
+    articulos.splice(0, articulos.length);
+    $(".botonEliminar").remove();
+}
+
 
 // CÓDIGO
 $(document).ready(function (){
     $('#enviar').click(enviarFormulario)
 });
 
+$(document).ready(function (){
+    $('#eliminar').onclick = function () {eliminarArticulos}
+});
